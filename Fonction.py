@@ -1,4 +1,6 @@
 import os
+import math
+
 def list_of_files(directory, extension):
     files_names = []
     for filename in os.listdir(directory):
@@ -85,8 +87,18 @@ def replacementpunctuation(files_names):
             file_clean.write(text_clean)  # Réecriture du texte sans ponctuaction dans le même fichier
 
 
+def text(files_names):
+    text = ''
+    for file_name in files_names:
+        input_file_path = "./cleaned" + '/' + file_name + "copie.txt"
+        with open(input_file_path, 'r') as f:
+            content = f.read()
+            text += content
 
+    # Renvoyer le texte des fichiers convertis et sans ponctuation
+    return text
 
+'''
 def word_occurrences_tf(text):
     # Initialiser un dictionnaire pour stocker les occurrences de mots
     word_count = {}
@@ -103,8 +115,29 @@ def word_occurrences_tf(text):
             word_count[word] = 1
 
     return word_count
-def idf(files_names):
+    
+'''
 
+def word_occurrences_tf(text):
+    # Initialiser un dictionnaire pour stocker les occurrences de mots
+    word_count = {}
+
+    # Diviser le discours en série de mots
+    words = text.split()
+
+    # Compter la fréquence de chaque mot
+    for word in words:
+        # Mettre à jour le dictionnaire à chaque fréquence.
+        if word in word_count:
+            word_count[word] += 1
+        else:
+            word_count[word] = 1
+
+    # Renvoyer le dictionnaire des occurrences de mots
+    return word_count
+
+'''
+def idf(files_names):
     occurence_word_all_files = {}
     for file_name in files_names:
         input_file_path = "./cleaned" + '/' + file_name + "copie.txt"
@@ -131,7 +164,36 @@ def idf(files_names):
         occurrence_idf[word] = math.log((len(files_names) / (occurence) + 1))
     return occurrence_idf  # retourne un dictionnaire qui a chaque mots associe son score idf.
 
+'''
+def idf(files_names):
+    occurence_word_all_files = {}
+    for file_name in files_names:
+        input_file_path = "./cleaned" + '/' + file_name + "copie.txt"
+        with open(input_file_path, 'r') as f:
+            content = f.read()
 
+            # Obtention du dictionnaire associant un mot au nombre de fois ou il apparait dans le fichier
+            occurence_files = word_occurrences_tf(content)
+
+            # Nous parcourons ensuite ce dictionnaire obtenus pour un fichier
+            for (word, occurence) in occurence_files.items():
+                if word in occurence_word_all_files:
+                    # Si le mot existe deja dans le dictionnaire regroupant tous les mots des fichiers on rajoute +1 a son compteur
+                    occurence_word_all_files[word] += 1
+                # Sinon le mots n'existe pas déjà dans le dictionnaire alors on l'ajoute et on initialise son compteur a 1
+                else:
+                    occurence_word_all_files[word] = 1
+
+    # Calculer les scores IDF pour chaque mot
+    occurrence_idf = {}
+    for (word, occurence) in occurence_word_all_files.items():
+        # Associe pour chaque mot son score IDF en faisant le logarithme du nombre de fichier / le nombre de fois qu'il apparait dans un fichier
+        occurrence_idf[word] = math.log((len(files_names) / (occurence) + 1))
+
+    # Renvoyer le dictionnaire des scores IDF
+    return occurrence_idf
+
+'''
 def TD_IDF(files_names: str) -> list[list]:
     tf_idf = []
     idf_scores = idf(files_names)
@@ -161,3 +223,35 @@ def TD_IDF(files_names: str) -> list[list]:
                 # Arrondie du resultat
                 tf_idf_row.append(round(idf_score * tf_score, 2))
             tf_idf.append(tf_idf_row)
+'''
+
+def TD_IDF(files_names):
+    tf_idf = []
+    idf_scores = idf(files_names)
+
+    tf_idf_row = []
+    for word in idf_scores.keys():
+        tf_idf_row.append(word)
+    tf_idf.append(tf_idf_row)
+
+    for file_name in files_names:
+        input_files_path = "./cleaned" + '/' + file_name + "copie.txt"
+        with open(input_files_path, 'r') as f:
+            content = f.read()
+
+            # Récupère dico tf associant a chaque mot du fichier le nombre de fois qu'il apparait
+            tf_scores = word_occurrences_tf(content)
+
+            tf_idf_row = []
+            for word in idf_scores.keys():
+                if word in tf_scores:
+                    tf_score = tf_scores[word]
+                else:
+                    tf_score = 0
+                idf_score = idf_scores[word]
+                # Arrondie du resultat
+                tf_idf_row.append(round(idf_score * tf_score, 2))
+            tf_idf.append(tf_idf_row)
+
+    # Renvoyer la matrice TF-IDF
+    return tf_idf

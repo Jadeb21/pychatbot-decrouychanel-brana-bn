@@ -1,4 +1,4 @@
-import os
+
 from Fonction import *
 
 directory = "./speeches"
@@ -10,8 +10,12 @@ print(list_nom)
 
 
 convert_file_lower_case(l,directory)
-replacementpunctuation(l)
+
+
+text = text(l)
 
 word_occurrences_tf(text)
-idf(files_names)
+idf(l)
 TD_IDF(l)
+td_idf=TD_IDF(l)
+print(td_idf)
