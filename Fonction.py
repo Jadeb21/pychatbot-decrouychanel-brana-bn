@@ -183,13 +183,15 @@ def TD_IDF(files_names):
 
 def TD_IDF_min(td_idf):
     td_idf_min = []
+    min = 0
     # Cherche les mots avec un IDF de 0
     for i in range (len(td_idf)):
         for j in range(len(td_idf[i])):
-            if td_idf[i][j] == 0.0:
+            if td_idf[i][j] == min:
                 td_idf_min.append(td_idf[0][j])
     # Renvoyer la liste de mots
-    return td_idf_min
+    td_idf_moins = set(td_idf_min)
+    return td_idf_moins
 
 
 
@@ -205,11 +207,50 @@ def TD_IDF_max(idf):
 
     # Cherche les mots ayant le plus grand IDF
     for i in idf.keys():
-        for j in idf.values():
-            if j == max:
-                td_idf_max.append(i)
+        if idf[i] == max:
+            td_idf_max.append(i)
     # Renvoyer la liste de mots
-    return td_idf_max
+    td_idf_plus = set(td_idf_max)
+    return td_idf_plus
+
+
+def repet_chirac(files_names, idf):
+    most_rep =[]
+    max1 = max2 = 0
+    with open('./cleaned/Nomination_Chirac1.txtcopie.txt', 'r') as ch1:
+        with open('./cleaned/Nomination_Chirac2.txtcopie.txt', 'r') as ch2 :
+            chirac1 = ch1.read()
+            chirac2 = ch2.read()
+
+            # Chercher le Tf le plus élevé
+            tf_1 = word_occurrences_tf(chirac1)
+            tf_2 = word_occurrences_tf(chirac2)
+
+            for val in tf_1.values():
+                if val > max1:
+                    max1 = val
+            for val in tf_2.values():
+                if val > max2:
+                    max2 = val
+            if max1 >= max2 :
+                max = max1
+            else:
+                max = max2
+
+            # Recherche des mots les plus fréquents
+            for i in tf_1.keys():
+                for j in tf_1.values():
+                    if j == max:
+                        most_rep.append(i)
+
+            for i in tf_2.keys():
+                for j in tf_2.values():
+                    if j == max:
+                        most_rep.append(i)
+
+            most_repet = set(most_rep)
+            # Renvoyer la liste de mots
+            return most_repet
 
 
 
