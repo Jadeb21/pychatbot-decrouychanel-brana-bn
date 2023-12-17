@@ -1,28 +1,32 @@
 import os
 import math
 
+
 def list_of_files(directory, extension):
     files_names = []
     for filename in os.listdir(directory):
         if filename.endswith(extension):
             files_names.append(filename)
     return files_names
+
+
 def print_list(l):
     print(l)
 
+
 def extraire_nom(l):
-    list_nom=[]
+    list_nom = []
     for i in l:
-        if i[-5]<=chr(90):
+        if i[-5] <= chr(90):
             list_nom.append(i[11:-5])
-        else :
+        else:
             list_nom.append(i[11:-4])
 
     for nom in list_nom:
-        if list_nom.count(nom)>1:
+        if list_nom.count(nom) > 1:
             list_nom.remove(nom)
 
-    list_prenom=[]
+    list_prenom = []
 
     for nom in list_nom:
 
@@ -39,28 +43,26 @@ def extraire_nom(l):
         elif nom == "Sarkozy":
             list_prenom.append("Nicolas Sarkozy")
 
-
     return list_prenom
 
 
-
-def convert_file_lower_case(files_names,directory):
-    for file_name in files_names :
+def convert_file_lower_case(files_names, directory):
+    for file_name in files_names:
         # Création chemin d'acces du fichier
         input_file_path = directory + '/' + file_name
         # Ouverture fichier
-        with open(input_file_path,'r') as content:
-            #Création chemin ou sera rangé le fichier modifier
+        with open(input_file_path, 'r') as content:
+            # Création chemin ou sera rangé le fichier modifier
             output_file_path = "./cleaned" + '/' + file_name + "copie.txt"
-            #Ouverture fichie copie
+            # Ouverture fichie copie
             with open(output_file_path, 'w') as copy:
                 # modification des majusucles en miniscule
                 line = content.readline()
                 while line != '':
-                    line_mod =''
-                    for car in line :
+                    line_mod = ''
+                    for car in line:
                         if car >= 'A' and car <= 'Z':
-                            car = chr(ord(car)+ 32 )
+                            car = chr(ord(car) + 32)
                         line_mod += car
                     # Ligne transformer en minuscule réecrite dans la copie
                     copy.write(line_mod)
@@ -100,6 +102,7 @@ def text(files_names):
 
 
 
+
 def word_occurrences_tf(text):
     # Initialiser un dictionnaire pour stocker les occurrences de mots
     word_count = {}
@@ -119,6 +122,8 @@ def word_occurrences_tf(text):
     return word_count
 
 
+
+
 def idf(files_names):
     occurence_word_all_files = {}
     for file_name in files_names:
@@ -134,7 +139,7 @@ def idf(files_names):
                 if word in occurence_word_all_files:
                     # Si le mot existe deja dans le dictionnaire regroupant tous les mots des fichiers on rajoute +1 a son compteur
                     occurence_word_all_files[word] += 1
-                # Sinon le mots n'existe pas déjà dans le dictionnaire alors on l'ajoute et on initialise son compteur a 1
+                # Sinon le mot n'existe pas déjà dans le dictionnaire alors on l'ajoute et on initialise son compteur a 1
                 else:
                     occurence_word_all_files[word] = 1
 
@@ -146,6 +151,7 @@ def idf(files_names):
 
     # Renvoyer le dictionnaire des scores IDF
     return occurrence_idf
+
 
 
 def TD_IDF(files_names):
@@ -176,24 +182,16 @@ def TD_IDF(files_names):
                 tf_idf_row.append(round(idf_score * tf_score, 2))
             tf_idf.append(tf_idf_row)
 
-
     # Renvoyer la matrice TF-IDF
     return tf_idf
 
-
 def TD_IDF_min(td_idf):
     td_idf_min = []
-    min = 0
-    # Cherche les mots avec un IDF de 0
-    for i in range (len(td_idf)):
+    for i in range(len(td_idf)):
         for j in range(len(td_idf[i])):
-            if td_idf[i][j] == min:
+            if td_idf[i][j]==0.0:
                 td_idf_min.append(td_idf[0][j])
-    # Renvoyer la liste de mots
-    td_idf_moins = set(td_idf_min)
-    return td_idf_moins
-
-
+    return td_idf_min
 
 def TD_IDF_max(idf):
     td_idf_max = []
@@ -252,5 +250,47 @@ def repet_chirac(files_names, idf):
             # Renvoyer la liste de mots
             return most_repet
 
+'''def mot_Nation(files_names, idf):
+    occurrences_nation = {}
+    for file_name in files_names:
+        input_file_path = "./cleaned" + '/' + file_name + "copie.txt"
+        with open(input_file_path, 'r') as fn:
+            content = fn.read()
+            terme = "Nation"
+            occurences = word_occurrences_tf(content)
+            for (terme, occurrence) in occurrences.items():
+                if terme in occurrences_nation:
+                    occurrences_nation
+    return count_occurrences'''
+
+def menu():
+    print("\nMenu:")
+    print("1. Poser une question")
+    print("2. Quitter")
+
+def fonctionnalite1():
+    print("Vous venez de taper 1.")
+
+def affichage():
+    choix = input("Comment puis-je vous aider ? Taper 1 si vous avez une question sinon taper 2")
+    if choix == "1":
+        fonctionnalite1()
+    elif choix == "2":
+        print("Au revoir!")
+    else:
+        print("Option non disponible.")
+    return
+
+def question(fonctionnalite1):
 
 
+def tokeniser(question):
+    caracteres_ponctuation = ['!', '"', '#', '$', '%', '&', "'", '(', ')', '*', '+', ',', '-', '.', '/', ':', ';', '<', '=', '>', '?', '@', '[', '\\', ']', '^', '_', '`', '{', '|', '}', '~']
+
+    # Suppression de la ponctuation et conversion en minuscules
+    question = ''.join(caractere for caractere in question if caractere not in caracteres_ponctuation).lower()
+
+    # Tokenisation en mots individuels
+    mots = question.split()
+
+    return mots
