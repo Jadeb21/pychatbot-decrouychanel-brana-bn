@@ -280,10 +280,8 @@ def affichage():
     else:
         print("Option non disponible.")
     return
-
 def question(fonctionnalite1):
-
-
+    return
 def tokeniser(question):
     caracteres_ponctuation = ['!', '"', '#', '$', '%', '&', "'", '(', ')', '*', '+', ',', '-', '.', '/', ':', ';', '<', '=', '>', '?', '@', '[', '\\', ']', '^', '_', '`', '{', '|', '}', '~']
 
@@ -294,3 +292,13 @@ def tokeniser(question):
     mots = question.split()
 
     return mots
+
+def terme_commun(question, files_names):
+    for file_name in files_names:
+        input_file_path = "./cleaned" + '/' + file_name + "copie.txt"
+        with open(input_file_path, 'r') as f:
+            content = f.read()
+            questions = set(question)
+            corps = set(files_names)
+            terme_commun = questions.intersection(corps)
+    return terme_commun
