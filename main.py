@@ -1,6 +1,7 @@
-import os
+
 from Fonction import *
 import math
+import os
 
 directory = "./speeches"
 extention = "txt"
@@ -38,7 +39,9 @@ menu()
 affichage()
 fonctionalite1 = fonctionnalite1()
 if fonctionalite1 == True :
-    question = question(fonctionnalite1)
-    print(question)
-tokenization_question(question)
-word_presence(question, l)
+    question = question()
+
+tk = tokenization_question(question)
+print(tk)
+w = word_presence(l, question)
+print (w)

@@ -303,14 +303,16 @@ def affichage():
     else:
         print("Option non disponible.")
     return
-def question(fonctionnalite1):
-    question = input("Posez votre question : ")
-    return
+def question():
+    question = str(input("Posez votre question : "))
+    return question
 def tokenization_question(question):
     word_question = []
-    #Application des mêmes modifications du texte sur la question
+    question = str(question)
+    # application des meme modification du texte sur la question
 
     content_lowercase = question.lower()
+
     punctuation_character = ',;:.?!""()[]*/'
     question_clean = ''
 
@@ -322,7 +324,7 @@ def tokenization_question(question):
         else:
             question_clean += car
 
-    #Divise la question en mot
+    # Divise la question en mot
     content = question_clean.split()
     for word in content:
         word_question.append(word)
@@ -339,9 +341,9 @@ def word_presence(files_names, word_question):
                 word_file.add(word)
     commun_terms = set(word_question) & word_file
     return commun_terms
-
+'''
 def vecteur_TF_IDF():
     for word in question:
         if word in corpus_word:
             index.mot
-    return
+    return'''
