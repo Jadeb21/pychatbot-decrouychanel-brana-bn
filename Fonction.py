@@ -264,8 +264,8 @@ def nation(files_names):
 def mot_Nation(files_names, idf):
     occurrences_nation = {}
     for file_name in files_names:
-        input_file_path = "./cleaned" + '/' + file_name + "copie.txt"
-        with open(input_file_path, 'r') as fn:
+        input_files_path = "./cleaned" + '/' + file_name + "copie.txt"
+        with open(input_files_path, 'r') as fn:
             content = fn.read()
             terme = "Nation"
             occurrences = word_occurrences_tf(content)
@@ -277,8 +277,8 @@ def mot_Nation(files_names, idf):
 def mot_Climat(files_names, idf):
     occurrences_climat = {}
     for file_name in files_names:
-        input_file_path = "./cleaned" + '/' + file_name + "copie.txt"
-        with open(input_file_path, 'r') as fn:
+        input_files_path = "./cleaned" + '/' + file_name + "copie.txt"
+        with open(input_files_path, 'r') as fn:
             content = fn.read()
             termes = "Climat", "écologie"
             occurrences = word_occurrences_tf(content)
