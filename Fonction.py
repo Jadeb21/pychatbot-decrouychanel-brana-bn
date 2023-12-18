@@ -306,35 +306,42 @@ def affichage():
 def question(fonctionnalite1):
     question = input("Posez votre question : ")
     return
-def tokeniser(question):
+def tokenization_question(question):
+    word_question = []
+    #Application des mêmes modifications du texte sur la question
+
+    content_lowercase = question.lower()
     punctuation_character = ',;:.?!""()[]*/'
-    Q_clean = ''
-    question = str(question)
-    # Verification des caractères un par un
-    '''for car in range (len(question)):
-        if punctuation_character in question:
-            question() += ' '
-        elif punctuation_character == "'" or punctuation_character == "-":
-            Q_clean += ' '
+    question_clean = ''
+
+    for car in content_lowercase:
+        if car in punctuation_character:
+            question_clean += ' '
+        elif car == "'" or car == "-":
+            question_clean += ' '
         else:
-            Q_clean += punctuation_character'''
-    return (question.replace(punctuation_character, ' ')
+            question_clean += car
 
-    #caracteres_ponctuation = ['!', '"', '#', '$', '%', '&', "'", '(', ')', '*', '+', ',', '-', '.', '/', ':', ';', '<', '=', '>', '?', '@', '[', '\\', ']', '^', '_', '`', '{', '|', '}', '~']
-            # Suppression de la ponctuation et conversion en minuscules
-            #question = ''.join(caractere for caractere in question if caractere not in caracteres_ponctuation).lower()
-    # Tokenisation en mots individuels
-    #mots = question.split()
+    #Divise la question en mot
+    content = question_clean.split()
+    for word in content:
+        word_question.append(word)
+    return word_question
 
-def terme_commun(question, files_names):
+def word_presence(files_names, word_question):
+    word_file = set()
     for file_name in files_names:
         input_file_path = "./cleaned" + '/' + file_name + "copie.txt"
         with open(input_file_path, 'r') as f:
             content = f.read()
-            questions = set(question)
-            corps = set(files_names)
-            terme_commun = questions.intersection(corps)
-    return terme_commun
+            speech = content.split()
+            for word in speech:
+                word_file.add(word)
+    commun_terms = set(word_question) & word_file
+    return commun_terms
 
 def vecteur_TF_IDF():
+    for word in question:
+        if word in corpus_word:
+            index.mot
     return
