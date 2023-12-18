@@ -309,9 +309,10 @@ def question():
 def tokenization_question(question):
     word_question = []
     question = str(question)
-    #Application des mêmes modifications du texte sur la question
+    # application des meme modification du texte sur la question
 
     content_lowercase = question.lower()
+
     punctuation_character = ',;:.?!""()[]*/'
     question_clean = ''
 
@@ -323,7 +324,7 @@ def tokenization_question(question):
         else:
             question_clean += car
 
-    #Divise la question en mot
+    # Divise la question en mot
     content = question_clean.split()
     for word in content:
         word_question.append(word)
@@ -340,20 +341,22 @@ def word_presence(files_names, word_question):
                 word_file.add(word)
     commun_terms = set(word_question) & word_file
     return commun_terms
-
-def vecteur_TF_IDF(question, score_tf, score_idf, files_names):
-    tfidf_question = [0] * len(files_names)
-    for file_name in files_names:
-        input_file_path = "./cleaned" + '/' + file_name + "copie.txt"
-        with open(input_file_path, 'r') as f:
-            content = f.read()
+'''
+def vecteur_TF_IDF():
     for word in question:
-        if word in files_names:
-            index_mot = files_names.index(word)
-            tfidf_question[index_mot] = scores_tf[word]  # Score TF
+        if word in corpus_word:
+            index.mot
+    return'''
 
-    # Calculer le score TF-IDF pour chaque mot de la question
-    for i in range(len(tfidf_question)):
-        tfidf_question[i] *= scores_idf[i]  # Score TF-IDF
+def TF_IDF_question(tf, idf, l, question):
 
-    return tfidf_question
+    vecteur_question = []
+    for mot in idf:
+        if mot in question:
+            tf = question.count(mot)
+            tfidf = tf * idf[mot]
+            vecteur_question.append(tfidf)
+        else:
+            vecteur_question.append(0)
+
+    return vecteur_question

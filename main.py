@@ -45,3 +45,6 @@ tk = tokenization_question(question)
 print(tk)
 w = word_presence(l, question)
 print (w)
+
+TF_IDF_question(tf, idf, l, question)
+
