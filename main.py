@@ -36,7 +36,7 @@ repet_chirac = repet_chirac(td_idf)
 print(repet_chirac)
 
 mot_Nation(l, idf)
-mot_Climat(directory, l)
+climat = mot_Climat(directory, l)
 
 menu()
 affichage()

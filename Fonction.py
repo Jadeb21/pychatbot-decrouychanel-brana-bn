@@ -280,6 +280,7 @@ def mot_Climat(directory, files_names):
     os.chdir(directory)
     president = []
     file_names = os.listdir("C:/Users/maely/PycharmProjects/ProjetJadeMaelysChatBot/speeches")
+    # Il faut changer l'acces au dessus pour que la fonction fonctionne
     word_count = []
     for i in range(len(file_names)):
         count = 0
@@ -383,21 +384,7 @@ def TF_IDF_question(tf, idf, l, question):
 
     return vecteur_question
 
-'''
-def dotProduct(D1, D2):
-    Sum = 0.0
 
-    for key in D1:
-
-        if key in D2:
-            Sum += (D1 * D2)
-
-    return Sum
-def vector_angle(D1, D2):
-    numerator = dotProduct(D1, D2)
-    denominator = math.sqrt(dotProduct(D1, D1) * dotProduct(D2, D2))
-
-    return math.acos(numerator / denominator)'''
 
 def tokenize(question):
     word_question = []
