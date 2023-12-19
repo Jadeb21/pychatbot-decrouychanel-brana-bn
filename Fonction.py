@@ -382,8 +382,29 @@ def vector_angle(D1, D2):
 
     return math.acos(numerator / denominator)'''
 
-def tokenize(question:str):
-    return simple_clean(question).split(" ")
+def tokenize(question):
+    word_question = []
+    question = str(question)
+    # application des meme modification du texte sur la question
+
+    content_lowercase = question.lower()
+
+    punctuation_character = ',;:.?!""()[]*/'
+    question_clean = ''
+
+    for car in content_lowercase:
+        if car in punctuation_character:
+            question_clean += ' '
+        elif car == "'" or car == "-":
+            question_clean += ' '
+        else:
+            question_clean += car
+
+    # Divise la question en mot
+    content = question_clean.split()
+    for word in content:
+        word_question.append(word)
+    return word_question
 
 
 def question_words(tokens:list):
@@ -431,7 +452,7 @@ def similarity(v1, v2):
     return result
 
 
-def relevancy(question_TFIDF, filenames):  # I don't believe we need the corpus TF-IDF...
+def relevancy(question_TFIDF, filenames):
     similarities = {}
     current = os.getcwd()
 
