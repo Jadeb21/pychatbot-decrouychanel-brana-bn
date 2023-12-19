@@ -260,11 +260,7 @@ def repet_chirac(td_idf):
             # Renvoyer la liste de mots
             return most_repet
 
-def nation(files_names):
-    '''for file_name in files_names:
-        input_file_path = "./cleaned" + '/' + file_name + "copie.txt"
-        with open(input_file_path, 'r') as f:
-            content = f.read()'''
+
 
 def mot_Nation(files_names, idf):
     occurrences_nation = {}
@@ -279,7 +275,8 @@ def mot_Nation(files_names, idf):
                     occurrences_nation
     #return count_occurrences
 
-def mot_Climat(files_names, idf):
+def mot_Climat(directory, files_names):
+    '''
     occurrences_climat = {}
     for file_name in files_names:
         input_files_path = "./cleaned" + '/' + file_name + "copie.txt"
@@ -290,7 +287,35 @@ def mot_Climat(files_names, idf):
             for (termes, occurrence) in occurrences.items():
                 if termes in occurrences_climat:
                     occurrences_climat
-    #return count_occurrences_climat
+    return occurrences_climat'''
+    os.chdir(directory)
+    president = []
+    file_names = os.listdir("C:/Users/maely/PycharmProjects/ProjetJadeMaelysChatBot/cleaned")
+    word_count = []
+    for i in range(len(os.listdir('C:/Users/maely/PycharmProjects/ProjetJadeMaelysChatBot/cleaned'))):
+        count = 0
+        with open(file_names[i], "r") as file:
+            for line in file:
+                words = line.split(" ")
+                for word in words:
+                    if word == "climat" or word == "écologie":
+                        president.append(file_names[i])
+                    else:
+                        count += 1
+            word_count.append(count)
+    lowest_count = min(word_count)
+    lowest_president = ''
+    for i in range(len(word_count)):
+        if word_count[i] <= lowest_count:
+            lowest_president = president[i]
+    parts = lowest_president.split("_")
+    president_name = ''
+    for part in parts:
+        if part != "Cleaned" and part != "Nomination" and part != "txt":
+            president_name = part.replace(".txt", "")
+            break
+    print(f"le premier président a parler de climate est : {president_name}")
+    return president_name
 def menu():
     print("\nMenu:")
     print("1. Poser une question")
@@ -534,54 +559,12 @@ QUESTION_STARTERS = {
 reponse = "###    mettre la phrase réponse    ###"
 
 
-def final_answer(question: str, phrase: str):
-    phrase = phrase.strip() + "."
+def final_answer(question: str, solut: str):
+    solut = solut.strip() + "."
     for key in QUESTION_STARTERS:
         if question.startswith(key,0,25):
-            phrase = phrase[0].upper() + phrase[1:]
-            phrase = QUESTION_STARTERS[key] + phrase
-    print(phrase)
+            solut = solut[0].upper() + solut[1:]
+            solut = QUESTION_STARTERS[key] + solut
+    print(solut)
 
 
-
-'''
-def most_important_words_in_question(vector_tf_idf_question, list_word):
-    max_tf_idf = 0
-
-    for i in range(len(vector_tf_idf_question)):
-        tf_idf_score = vector_tf_idf_question[i]
-
-        if tf_idf_score > max_tf_idf:
-            max_tf_idf = tf_idf_score
-            max_word = list_word[i]
-    return max_word
-
-
-def generation_question(document_more_relevant_original, most_important_word, question):
-    question_starters = {"Comment": "Après analyse, ", "Pourquoi": "Car, ", "Peux-tu": "Oui, bien sûr!"}
-    input_files_path = "./speeches" + '/' + document_more_relevant_original
-    with open(input_files_path, "r") as f1:
-        speech = f1.read()
-        # Divise le texte en une liste de pharse
-        content = speech.split(".")
-
-        position_word = -1
-        index = 0
-        while index < len(content) and position_word == -1:
-            # On trouve la position du mot dans la liste
-            if most_important_word in content[index]:
-                position_word = index
-            index += 1
-
-        if position_word == -1:
-            return None
-        # On retourne la phrase entière de l'indice
-        sentence = content[position_word]
-        word_question = question.split()
-        if word_question[0] in question_starters:
-            final_sentence = question_starters[word_question[0]] + sentence
-        else:
-            final_sentence = sentence
-
-    return final_sentence
-'''
