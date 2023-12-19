@@ -275,30 +275,19 @@ def mot_Nation(files_names, idf):
                     occurrences_nation
     #return count_occurrences
 
+
 def mot_Climat(directory, files_names):
-    '''
-    occurrences_climat = {}
-    for file_name in files_names:
-        input_files_path = "./cleaned" + '/' + file_name + "copie.txt"
-        with open(input_files_path, 'r') as fn:
-            content = fn.read()
-            termes = "Climat", "écologie"
-            occurrences = word_occurrences_tf(content)
-            for (termes, occurrence) in occurrences.items():
-                if termes in occurrences_climat:
-                    occurrences_climat
-    return occurrences_climat'''
     os.chdir(directory)
     president = []
-    file_names = os.listdir("C:/Users/maely/PycharmProjects/ProjetJadeMaelysChatBot/cleaned")
+    file_names = os.listdir("C:/Users/maely/PycharmProjects/ProjetJadeMaelysChatBot/speeches")
     word_count = []
-    for i in range(len(os.listdir('C:/Users/maely/PycharmProjects/ProjetJadeMaelysChatBot/cleaned'))):
+    for i in range(len(file_names)):
         count = 0
         with open(file_names[i], "r") as file:
             for line in file:
                 words = line.split(" ")
                 for word in words:
-                    if word == "climat" or word == "écologie":
+                    if word == "climat" or word == "écologie":
                         president.append(file_names[i])
                     else:
                         count += 1
@@ -314,8 +303,11 @@ def mot_Climat(directory, files_names):
         if part != "Cleaned" and part != "Nomination" and part != "txt":
             president_name = part.replace(".txt", "")
             break
-    print(f"le premier président a parler de climate est : {president_name}")
+    print(f"Le premier président à parler de climat est : {president_name}")
     return president_name
+
+
+
 def menu():
     print("\nMenu:")
     print("1. Poser une question")
