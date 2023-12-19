@@ -2,6 +2,8 @@
 from Fonction import *
 import math
 import os
+import string
+import sys
 
 directory = "./speeches"
 extention = "txt"
@@ -46,5 +48,20 @@ print(tk)
 w = word_presence(l, question)
 print (w)
 
-TF_IDF_question(tf, idf, l, question)
+tf_idf_q = TF_IDF_question(tf, idf, l, question)
+question_vector(tk, l)
+
+relevancy(tf_idf_q, l)
+
+speeches_eq(path)
+
+response(question)
+
+conveniency(question)
+
+#final_answer(question, phrase)
+
+'''
+most_important_words_in_question(tf_idf_q, question)
+generation_question(document_more_relevant_original, most_important_word, question)'''
 

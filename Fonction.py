@@ -1,5 +1,10 @@
 import os
 import math
+import string
+import sys
+all_words = []
+path = os.getcwd()
+print(path)
 
 
 def list_of_files(directory, extension):
@@ -360,3 +365,202 @@ def TF_IDF_question(tf, idf, l, question):
             vecteur_question.append(0)
 
     return vecteur_question
+
+'''
+def dotProduct(D1, D2):
+    Sum = 0.0
+
+    for key in D1:
+
+        if key in D2:
+            Sum += (D1 * D2)
+
+    return Sum
+def vector_angle(D1, D2):
+    numerator = dotProduct(D1, D2)
+    denominator = math.sqrt(dotProduct(D1, D1) * dotProduct(D2, D2))
+
+    return math.acos(numerator / denominator)'''
+
+def tokenize(question:str):
+    return simple_clean(question).split(" ")
+
+
+def question_words(tokens:list):
+    meaningful_words = []  # filtering out the terms that aren't in the corpus
+    for j in range(len(tokens)):
+        if tokens[j] in all_words:
+            meaningful_words.append(tokens[j])
+    return meaningful_words
+
+
+def question_vector(tokens, l):
+    TF_question = {}
+    for j in range(len(tokens)):
+        if tokens[j] in TF_question:
+            TF_question[tokens[j]] += 1
+        else:
+            TF_question[tokens[j]] = 1
+
+    TF_IDF_question = {}
+
+    for key, value in TF_question.items():
+        TF_IDF_question[key] = value * idf(l)[key]
+    return TF_IDF_question
+
+
+def scalar(vector1, vector2):
+    scalar_value = 0
+
+    for i in range(len(vector1)):
+        scalar_value += vector1[i] * vector2[i]
+    return scalar_value
+
+
+def norm(a):
+    somme = 0
+    for coordinate in a:
+        somme += coordinate**2
+    return math.sqrt(somme)
+
+
+def similarity(v1, v2):
+    result = 0
+    if norm(v1) * norm(v2) != 0:
+        result = scalar(v1, v2) / (norm(v1) * norm(v2))
+    return result
+
+
+def relevancy(question_TFIDF, filenames):  # I don't believe we need the corpus TF-IDF...
+    similarities = {}
+    current = os.getcwd()
+
+    for i in range(len(os.listdir(filenames))):
+        filepath = os.path.join(current, "cleaned", "Cleaned_" + os.listdir(filenames)[i])
+        with open(filepath, 'r') as text:
+            singleline = ""
+            for line in text.readlines():
+                singleline += line
+
+            doc_token = question_vector(question_words(tokenize(singleline)))
+            doc_copy = doc_token
+
+            question_copy = question_TFIDF
+            # Now we have vectors of the same size
+
+            similarities[filepath] = similarity(list(question_copy.values()), list(doc_copy.values()))
+
+    maximum = similarities[list(similarities.keys())[0]]
+    maxkey = ""
+    for key, value in similarities.items():
+        if value > maximum:
+            maxkey = key
+
+    return maxkey
+
+
+def speeches_eq(path):  # This will return the equivalent file in the speeches folder
+    path_chain = path.split("\\")
+    path_chain[-2] = "speeches"
+    path_chain[-1] = path_chain[-1][8:]
+    real_path = "\\".join(path_chain)
+    return real_path
+
+
+def response(question):
+    vector = question_vector(question_words(tokenize(question)))
+    keyword = list(vector)[0]
+
+    for key, value in vector.items():
+        if value > vector[keyword]:
+            keyword = key
+
+    most_relevant_doc = speeches_eq(relevancy(vector, "speeches"))
+
+    with open(most_relevant_doc, "r") as doc:
+        save_line = ""
+
+        for linee in doc.read().split("\n"):
+            if keyword in linee:
+                save_line = linee
+
+        print("question: ", question)
+        print("Relevant document returned: ", most_relevant_doc)
+        print("Word that is likely to be what you're looking for: ", keyword)
+        print("Response generated: ", save_line)
+    return save_line
+
+
+def conveniency(question):
+    return response(question_vector(question_words(tokenize(question))))
+
+
+QUESTION_STARTERS = {
+    "comment": "Après analyse, ",
+    "pourquoi": "Car, ",
+    "qui": "La personne responsable de cela est ",
+    "combien": "Au total il y a ",
+    "est-ce que": "Il est possible que ",
+    "peut-on": "Oui, il est possible de ",
+    "serait-il possible": "Il est envisageable de ",
+    "comment faire": "Voici comment procéder : ",
+    "quelle est la raison": "La raison principale est ",
+    "est-ce que tu peux": "Oui, je peux ",
+    "est-ce que tu sais": "Oui, je sais que ",
+    "peux-tu": "Oui, je peux ",
+}
+
+reponse = "###    mettre la phrase réponse    ###"
+
+
+def final_answer(question: str, phrase: str):
+    phrase = phrase.strip() + "."
+    for key in QUESTION_STARTERS:
+        if question.startswith(key,0,25):
+            phrase = phrase[0].upper() + phrase[1:]
+            phrase = QUESTION_STARTERS[key] + phrase
+    print(phrase)
+
+
+
+'''
+def most_important_words_in_question(vector_tf_idf_question, list_word):
+    max_tf_idf = 0
+
+    for i in range(len(vector_tf_idf_question)):
+        tf_idf_score = vector_tf_idf_question[i]
+
+        if tf_idf_score > max_tf_idf:
+            max_tf_idf = tf_idf_score
+            max_word = list_word[i]
+    return max_word
+
+
+def generation_question(document_more_relevant_original, most_important_word, question):
+    question_starters = {"Comment": "Après analyse, ", "Pourquoi": "Car, ", "Peux-tu": "Oui, bien sûr!"}
+    input_files_path = "./speeches" + '/' + document_more_relevant_original
+    with open(input_files_path, "r") as f1:
+        speech = f1.read()
+        # Divise le texte en une liste de pharse
+        content = speech.split(".")
+
+        position_word = -1
+        index = 0
+        while index < len(content) and position_word == -1:
+            # On trouve la position du mot dans la liste
+            if most_important_word in content[index]:
+                position_word = index
+            index += 1
+
+        if position_word == -1:
+            return None
+        # On retourne la phrase entière de l'indice
+        sentence = content[position_word]
+        word_question = question.split()
+        if word_question[0] in question_starters:
+            final_sentence = question_starters[word_question[0]] + sentence
+        else:
+            final_sentence = sentence
+
+    return final_sentence
+'''
